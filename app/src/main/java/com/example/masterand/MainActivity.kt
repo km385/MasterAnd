@@ -144,7 +144,11 @@ fun ProfileScreen(
         )
 
         Button(
-            onClick = { navController.navigate(route = Screen.Second.route) },
+            onClick = { navController.navigate(
+                route = Screen.Second.passArguments(
+                    login = name,
+                    description = "puste",
+                    profileUri = imageUri.toString() )) },
             modifier = Modifier.fillMaxWidth(),
             enabled = isNameValid && isEmailValid && isColorsValid
         ) {

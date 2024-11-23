@@ -1,5 +1,6 @@
 package com.example.firstapp
 
+import android.net.Uri
 import android.os.Bundle
 
 import android.widget.ImageView
@@ -32,10 +33,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import coil.compose.AsyncImage
 import com.example.masterand.R
 import com.example.masterand.Screen
 
@@ -60,6 +63,7 @@ fun ProfileCard(
     navController: NavController,
     login: String,
     description: String,
+    profileUri: Uri,
     modifier: Modifier = Modifier
 ) {
     Surface(
@@ -82,12 +86,20 @@ fun ProfileCard(
                     modifier = Modifier
                         .padding(start = 16.dp)
                 ) {
+//                    AsyncImage(
+//                        model = profileUri,
+//                        contentDescription = "Profile photo",
+//                        modifier = Modifier
+//                            .size(64.dp)
+//                            .clip(CircleShape),
+//                        contentScale = ContentScale.Crop
+//                    )
                     Image(
-                        painter = painterResource(R.drawable.ic_launcher_background),
+                        painter = painterResource(R.drawable.baseline_question_mark_24),
                         contentDescription = "",
                         modifier = Modifier
                             .size(64.dp)
-                            .clip(CircleShape) // Crops image to a circle
+                            .clip(CircleShape) 
                     )
                 }
                 Column(
