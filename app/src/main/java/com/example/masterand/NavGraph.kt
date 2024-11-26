@@ -13,7 +13,7 @@ import com.example.firstapp.ProfileCard
 fun SetupNavGraph(navController: NavHostController){
     NavHost(
         navController = navController,
-                startDestination = Screen.First.route ){
+                startDestination = Screen.Third.route ){
         composable(route = Screen.First.route, arguments = listOf(navArgument("login") {
             type = NavType.StringType
         })) {

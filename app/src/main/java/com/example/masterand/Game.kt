@@ -24,6 +24,7 @@ import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -32,6 +33,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 
 private const val TAG = "Game"
 
@@ -92,7 +94,7 @@ fun GameScreen(
 
 ) {
     val availableColors = listOf(Color.Red, Color(0xFFFFA500), Color.Blue, Color.Yellow, Color.Black, Color(0xFF00FFFF))
-
+    val score = remember { mutableIntStateOf(0) }
     var rows = remember {
         mutableStateListOf(
             RowState(
@@ -108,7 +110,8 @@ fun GameScreen(
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Text(
-            text = "Your score"
+            text = "Your score: ${score.intValue}",
+            fontSize = 30.sp
         )
         LazyColumn {
             items(rows.size) { rowIndex ->
@@ -151,6 +154,7 @@ fun GameScreen(
                                 isClickable = true
                             ))
                         }
+                        score.value += 1
                     }
                 )
             }
