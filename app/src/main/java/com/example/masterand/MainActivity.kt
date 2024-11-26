@@ -24,7 +24,6 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -37,15 +36,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import androidx.navigation.NavGraph
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import coil.compose.AsyncImage
 import com.example.masterand.ui.theme.MasterAndTheme
 
+private const val TAG = "MainActivity"
 class MainActivity : ComponentActivity() {
     lateinit var navController: NavHostController
 
@@ -228,7 +226,9 @@ fun ProfileImageWithPicker(
             Icon(
                 painter = painterResource(R.drawable.baseline_image_search_24),
                 contentDescription = "Select profile photo",
-                modifier = Modifier.size(40.dp).align(Alignment.TopEnd),
+                modifier = Modifier
+                    .size(40.dp)
+                    .align(Alignment.TopEnd),
                 tint = MaterialTheme.colorScheme.onSurfaceVariant
             )
         }

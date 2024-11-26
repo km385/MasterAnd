@@ -13,7 +13,7 @@ import com.example.firstapp.ProfileCard
 fun SetupNavGraph(navController: NavHostController){
     NavHost(
         navController = navController,
-                startDestination = Screen.Third.route ){
+                startDestination = Screen.First.route ){
         composable(route = Screen.First.route, arguments = listOf(navArgument("login") {
             type = NavType.StringType
         })) {
@@ -33,7 +33,7 @@ fun SetupNavGraph(navController: NavHostController){
             val login = backStackEntry.arguments?.getString("login") ?: ""
             val description = backStackEntry.arguments?.getString("description") ?: ""
             val profileUri = backStackEntry.arguments?.getString("profileUri") ?.let {
-                Uri.parse(Uri.decode(it))
+                Uri.parse(it)
             }
             ProfileCard(
                 navController = navController,
