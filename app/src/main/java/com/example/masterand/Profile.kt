@@ -1,4 +1,4 @@
-package com.example.firstapp
+package com.example.masterand
 
 import android.net.Uri
 import androidx.compose.foundation.layout.Arrangement
@@ -21,14 +21,21 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 import coil.compose.AsyncImage
 import com.example.masterand.Screen
+import com.example.masterand.providers.AppViewModelProvider
+import com.example.masterand.viewModels.ProfileViewModel
 
 private const val TAG = "Profile"
 
@@ -53,8 +60,15 @@ fun ProfileCard(
     login: String,
     description: String,
     profileUri: Uri,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    viewModel: ProfileViewModel = viewModel(factory = AppViewModelProvider.Factory)
 ) {
+    val coroutineScope = rememberCoroutineScope()
+    LaunchedEffect(key1 = viewModel.playerId.value) {
+
+    }
+
+
     Surface(
         modifier = Modifier.fillMaxSize(),
         color = MaterialTheme.colorScheme.background
@@ -109,11 +123,11 @@ fun ProfileCard(
                 horizontalArrangement = Arrangement.SpaceEvenly
             ) {
                 FilledButtonExample(onClick = {
-                    navController.navigate(route = Screen.First.route)
+                    navController.navigate(route = Screen.Login.route)
                 }, text = "back")
 
                 FilledButtonExample(onClick = {
-
+                    navController.navigate(Screen.Game.route)
                 }, text = "play")
 
                 FilledButtonExample(onClick = {
@@ -126,7 +140,7 @@ fun ProfileCard(
 
 
         Example(onClick = {
-            navController.navigate(route = Screen.First.route)
+            navController.navigate(route = Screen.Login.route)
         })
     }
 }
@@ -156,12 +170,15 @@ fun FilledButtonExample(onClick: () -> Unit, text:String) {
     }
 }
 
-//@Preview(showBackground = true)
-//@Composable
-//fun ProfileCardPreview() {
-//    FirstAppTheme {
-//        ProfileCard(Profile("Calvin", "description of the profile " +
-//                "that is empty " +
-//                "and it is a privew"))
-//    }
-//}
+@Preview(showBackground = true)
+@Composable
+fun ProfileCardPreview() {
+
+        ProfileCard(
+            navController = rememberNavController(),
+            login = "login",
+            description = "desc",
+            profileUri = Uri.EMPTY
+        )
+
+}

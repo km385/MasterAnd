@@ -34,6 +34,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 
 private const val TAG = "Game"
 
@@ -91,7 +93,7 @@ fun checkColors(
 
 @Composable
 fun GameScreen(
-
+    navController: NavController
 ) {
     val availableColors = listOf(Color.Red, Color(0xFFFFA500), Color.Blue, Color.Yellow, Color.Black, Color(0xFF00FFFF))
     val score = remember { mutableIntStateOf(0) }
@@ -154,6 +156,10 @@ fun GameScreen(
                                 isClickable = true
                             ))
                         }
+
+                        if (feedback.all { it == Color.Red }) {
+                            TODO() // przycisk highscore
+                        }
                         score.value += 1
                     }
                 )
@@ -172,6 +178,19 @@ fun GameScreen(
             )
         }) {
             Text("replay")
+        }
+        Spacer(modifier = Modifier.size(20.dp))
+        Button(onClick = {
+            navController.popBackStack()
+        }) {
+            Text("log out")
+        }
+
+        Spacer(modifier = Modifier.size(20.dp))
+        Button(onClick = {
+            navController.navigate(route = Screen.HighScores.route)
+        }) {
+            Text("High Scores Table")
         }
     }
 }
@@ -286,5 +305,5 @@ fun SmallCircle(color: Color) {
 @Preview(showBackground = true)
 @Composable
 fun GamePreview() {
-    GameScreen()
+    GameScreen(navController = rememberNavController())
 }

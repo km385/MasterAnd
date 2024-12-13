@@ -7,20 +7,25 @@ import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
-import com.example.firstapp.ProfileCard
+
 
 @Composable
 fun SetupNavGraph(navController: NavHostController){
     NavHost(
         navController = navController,
-                startDestination = Screen.Third.route ){
-        composable(route = Screen.First.route, arguments = listOf(navArgument("login") {
-            type = NavType.StringType
-        })) {
-            ProfileScreen(navController = navController, )
-        }
+        startDestination = Screen.Login.route
+    ) {
         composable(
-            route = Screen.Second.route,
+            route = Screen.Login.route/*,
+            arguments = listOf(navArgument("login") {
+                type = NavType.StringType
+            })*/
+        ) {
+            ProfileScreen(navController = navController)
+        }
+
+        composable(
+            route = Screen.Profile.route,
             arguments = listOf(
                 navArgument("login") {type = NavType.StringType},
                 navArgument("description") {type = NavType.StringType},
@@ -41,6 +46,15 @@ fun SetupNavGraph(navController: NavHostController){
                 description = description,
                 profileUri = profileUri ?: Uri.EMPTY
             )
+
+        }
+
+        composable(route = Screen.Game.route) {
+            GameScreen(navController = navController)
+        }
+
+        composable(route = Screen.HighScores.route) {
+            HighScores(navController = navController)
         }
     }
 }

@@ -64,23 +64,23 @@ class MainActivity : ComponentActivity() {
     }
 }
 
-@Composable
-fun FirstScreenInitialll(
-    navController: NavController
-) {
-    Column(
-//        modifier = Modifier.fillMaxSize(),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center
-    ) {
-        Button(
-            onClick = { navController.navigate(route = Screen.Second.route)
-            }
-        ) {
-            Text(text = "Kliknij mnie i zobacz co się stanie!")
-        }
-    }
-}
+//@Composable
+//fun FirstScreenInitialll(
+//    navController: NavController
+//) {
+//    Column(
+////        modifier = Modifier.fillMaxSize(),
+//        horizontalAlignment = Alignment.CenterHorizontally,
+//        verticalArrangement = Arrangement.Center
+//    ) {
+//        Button(
+//            onClick = { navController.navigate(route = Screen.Game.route)
+//            }
+//        ) {
+//            Text(text = "Kliknij mnie i zobacz co się stanie!")
+//        }
+//    }
+//}
 
 @Composable
 fun ProfileScreen(
@@ -88,8 +88,8 @@ fun ProfileScreen(
 ) {
 
     var imageUri by remember { mutableStateOf<Uri?>(null) }
-    var name by rememberSaveable { mutableStateOf("") }
-    var email by rememberSaveable { mutableStateOf("") }
+    var name by rememberSaveable { mutableStateOf("imie") }
+    var email by rememberSaveable { mutableStateOf("test@test.com") }
     var colors by rememberSaveable { mutableStateOf("5") }
 
     val isNameValid = name.isNotBlank()
@@ -143,10 +143,14 @@ fun ProfileScreen(
 
         Button(
             onClick = { navController.navigate(
-                route = Screen.Second.passArguments(
-                    login = name,
-                    description = "puste",
-                    profileUri = imageUri.toString() )) },
+//                route = Screen.Second.passArguments(
+//                    login = name,
+//                    description = "puste",
+//                    profileUri = imageUri.toString()
+//                )
+                route = Screen.Profile.route
+            )
+            },
             modifier = Modifier.fillMaxWidth(),
             enabled = isNameValid && isEmailValid && isColorsValid
         ) {
