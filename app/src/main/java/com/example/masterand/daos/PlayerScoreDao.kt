@@ -7,9 +7,11 @@ import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface PlayerScoreDao {
-    //złączenie tabel i pobranie danych do klasy pośredniczącej
     @Query(
-        "SELECT players.playerId AS playerId, scores.scoreId AS scoreId " +
+        "SELECT players.playerId AS playerId, " +
+                "players.name AS playerName," +
+                "scores.scoreId AS scoreId, " +
+                "scores.score AS score " +
                 "FROM players, scores WHERE players.playerId = scores.playerId"
     )
     fun loadPlayersWithScores(): Flow<List<PlayerWithScore>>

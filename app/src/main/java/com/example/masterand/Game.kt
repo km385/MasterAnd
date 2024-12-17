@@ -27,6 +27,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -34,8 +35,13 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
+import com.example.masterand.providers.AppViewModelProvider
+import com.example.masterand.viewModels.GameViewModel
+import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.launch
 
 private const val TAG = "Game"
 
@@ -93,7 +99,8 @@ fun checkColors(
 
 @Composable
 fun GameScreen(
-    navController: NavController
+    navController: NavController,
+    viewModel: GameViewModel = viewModel(factory = AppViewModelProvider.Factory)
 ) {
     val availableColors = listOf(Color.Red, Color(0xFFFFA500), Color.Blue, Color.Yellow, Color.Black, Color(0xFF00FFFF))
     val score = remember { mutableIntStateOf(0) }
@@ -106,6 +113,8 @@ fun GameScreen(
             )
         )
     }
+    val coroutineScope = rememberCoroutineScope()
+
     val correctColors = remember { selectRandomColors(availableColors) }
 
     Column(
@@ -158,7 +167,12 @@ fun GameScreen(
                         }
 
                         if (feedback.all { it == Color.Red }) {
-                            TODO() // przycisk highscore
+                            // TODO("wygrana") // przycisk highscore
+                            viewModel.score.longValue = score.intValue.toLong()
+                            coroutineScope.launch {
+                                viewModel.savePlayerScore()
+                            }
+
                         }
                         score.value += 1
                     }

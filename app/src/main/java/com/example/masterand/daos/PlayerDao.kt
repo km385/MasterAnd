@@ -14,7 +14,7 @@ interface PlayerDao {
     suspend fun insert(player: Player) : Long
 
     @Query("SELECT * from players WHERE playerId = :playerId")
-    fun getPlayerStream(playerId: Int): Flow<Player>
+    fun getPlayerStream(playerId: Long): Flow<Player>
 
     @Query("SELECT * from players WHERE email = :email")
     suspend fun getPlayersByEmail(email: String): List<Player>
