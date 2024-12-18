@@ -1,6 +1,5 @@
 package com.example.masterand
 
-import android.util.Log
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -40,7 +39,6 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.example.masterand.providers.AppViewModelProvider
 import com.example.masterand.viewModels.GameViewModel
-import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
 
 private const val TAG = "Game"
@@ -182,11 +180,12 @@ fun GameScreen(
         }
 
         Button(onClick = {
-            viewModel.playerId = 5
+            // TODO("comment out when shipping to prod")
             viewModel.score.longValue = 12
-           coroutineScope.launch {
-               viewModel.savePlayerScore()
-           }
+//            viewModel.score.longValue = score.intValue.toLong()
+            coroutineScope.launch {
+                viewModel.savePlayerScore()
+            }
         }) {
             Text("test save score")
         }
