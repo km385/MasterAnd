@@ -54,7 +54,7 @@ fun SetupNavGraph(navController: NavHostController){
         }
 
         composable(route = Screen.HighScores.route) {
-            HighScores(navController = navController)
+            ResultsScreen(navController = navController)
         }
     }
 }

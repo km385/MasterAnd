@@ -182,6 +182,16 @@ fun GameScreen(
         }
 
         Button(onClick = {
+            viewModel.playerId = 5
+            viewModel.score.longValue = 12
+           coroutineScope.launch {
+               viewModel.savePlayerScore()
+           }
+        }) {
+            Text("test save score")
+        }
+
+        Button(onClick = {
             rows.clear()
             rows.add(
                 RowState(

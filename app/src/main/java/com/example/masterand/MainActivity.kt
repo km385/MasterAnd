@@ -2,6 +2,7 @@ package com.example.masterand
 
 import android.net.Uri
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.compose.setContent
@@ -155,19 +156,20 @@ fun ProfileScreen(
             onClick = {
                 viewModel.email.value = email
                 viewModel.name.value = name
+                viewModel.imageUri.value = imageUri.toString()
 
                 coroutineScope.launch {
                     viewModel.savePlayer()
-                }
-
-                navController.navigate(
+                    navController.navigate(
 //                route = Screen.Second.passArguments(
 //                    login = name,
 //                    description = "puste",
 //                    profileUri = imageUri.toString()
 //                )
-                    route = Screen.Profile.route
-                )
+                        route = Screen.Profile.route
+                    )
+                }
+
             },
             modifier = Modifier.fillMaxWidth(),
             enabled = isNameValid && isEmailValid && isColorsValid
@@ -224,7 +226,6 @@ fun ProfileImageWithPicker(
     ) { uri: Uri? ->
         uri?.let { onImagePicked(it) }
     }
-
     Box(
         modifier = modifier
             .size(100.dp)

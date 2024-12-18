@@ -8,5 +8,6 @@ data class Player(
     @PrimaryKey(autoGenerate = true)
     val playerId: Long = 0,
     var name: String,
-    var email: String
+    var email: String,
+    var profileImageUri: String? = null
 )

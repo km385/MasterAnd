@@ -1,5 +1,6 @@
 package com.example.masterand.repositories
 
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.example.masterand.daos.PlayerDao
 import com.example.masterand.entities.Player
@@ -17,6 +18,10 @@ class PlayersRepositoryImpl(private val playerDao: PlayerDao) : PlayersRepositor
 
     override fun setCurrentPlayerId(id: Long) {
         currentPlayerId.postValue(id)
+    }
+
+    override fun getCurrentPlayerId(): LiveData<Long> {
+        return currentPlayerId
     }
 
     override suspend fun getPlayersByEmail(email: String): List<Player> =

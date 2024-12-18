@@ -1,6 +1,7 @@
 package com.example.masterand
 
 import android.net.Uri
+import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -22,11 +23,13 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -39,21 +42,6 @@ import com.example.masterand.viewModels.ProfileViewModel
 
 private const val TAG = "Profile"
 
-//@Composable
-//fun SecondScreenInitial(navController: NavController) {
-//    Column(
-//        horizontalAlignment = Alignment.CenterHorizontally,
-//        verticalArrangement = Arrangement.Center) {
-////        GifExample()
-//        Spacer(modifier = Modifier.width(100.dp))
-//        Button(onClick = { navController.navigate(route =
-//        Screen.First.route) }) {
-//            Text(text = "Cha! Cha-cha! Cha-cha-cha!")
-//        }
-//    }
-//}
-
-
 @Composable
 fun ProfileCard(
     navController: NavController,
@@ -64,10 +52,13 @@ fun ProfileCard(
     viewModel: ProfileViewModel = viewModel(factory = AppViewModelProvider.Factory)
 ) {
     val coroutineScope = rememberCoroutineScope()
-    LaunchedEffect(key1 = viewModel.playerId.value) {
-
+    LaunchedEffect(Unit) {
+        viewModel.loadPlayer()
     }
 
+    val name by viewModel.name
+    val email by viewModel.email
+    val imageUri by viewModel.imageUri
 
     Surface(
         modifier = Modifier.fillMaxSize(),
@@ -88,32 +79,35 @@ fun ProfileCard(
                 Box(
                     modifier = Modifier
                         .padding(start = 16.dp)
+                        .size(100.dp)  // Adjust the size as needed
+                        .clip(CircleShape)
                 ) {
-                    AsyncImage(
-                        model = profileUri,
-                        contentDescription = "Profile photo",
-                        modifier = Modifier
-                            .size(64.dp)
-                            .clip(CircleShape),
-                        contentScale = ContentScale.Crop
-                    )
-//                    Image(
-//                        painter = painterResource(R.drawable.baseline_question_mark_24),
-//                        contentDescription = "",
-//                        modifier = Modifier
-//                            .size(64.dp)
-//                            .clip(CircleShape)
-//                    )
+
+                    if (imageUri != "null") {
+                        AsyncImage(
+                            model = imageUri,
+                            contentDescription = "Profile Image",
+                            modifier = Modifier.fillMaxSize(),
+                            contentScale = ContentScale.Crop
+                        )
+                    } else {
+                        Icon(
+                            painter = painterResource(R.drawable.baseline_question_mark_24),
+                            contentDescription = "Select profile photo",
+                            modifier = Modifier.fillMaxSize(),
+                            tint = MaterialTheme.colorScheme.onSurfaceVariant
+                        )
+                    }
                 }
                 Column(
                     modifier = Modifier
                         .padding(start = 16.dp)
                 ) {
-                    Text(login)
+                    Text(name)
                     Spacer(
                         modifier = Modifier.size(8.dp)
                     )
-                    Text(description)
+                    Text(email)
                 }
             }
 
@@ -131,7 +125,7 @@ fun ProfileCard(
                 }, text = "play")
 
                 FilledButtonExample(onClick = {
-
+                    navController.navigate(Screen.HighScores.route)
                 }, text = "results")
             }
 
