@@ -30,19 +30,20 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.example.masterand.entities.PlayerWithScore
-import com.example.masterand.providers.AppViewModelProvider
+//import com.example.masterand.providers.AppViewModelProvider
 import com.example.masterand.viewModels.ResultsViewModel
 
 
-// Composable Screen
 @Composable
 fun ResultsScreen(
     navController: NavController,
-    viewModel: ResultsViewModel = viewModel(factory = AppViewModelProvider.Factory),
+//    viewModel: ResultsViewModel = viewModel(factory = AppViewModelProvider.Factory),
+    viewModel: ResultsViewModel = hiltViewModel<ResultsViewModel>(),
     recentScore: Long?,
     colorCount: Int?
 ) {
@@ -54,14 +55,12 @@ fun ResultsScreen(
         }
     }
 
-    // UI
     Column(
         modifier = Modifier
             .fillMaxSize()
             .padding(16.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        // Results Title
         Text(
             text = "Results",
             fontSize = 32.sp,

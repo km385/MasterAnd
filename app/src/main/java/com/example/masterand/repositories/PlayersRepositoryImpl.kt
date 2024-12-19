@@ -5,9 +5,13 @@ import androidx.lifecycle.MutableLiveData
 import com.example.masterand.daos.PlayerDao
 import com.example.masterand.entities.Player
 import kotlinx.coroutines.flow.Flow
+import javax.inject.Inject
+import javax.inject.Singleton
 
-
-class PlayersRepositoryImpl(private val playerDao: PlayerDao) : PlayersRepository {
+@Singleton
+class PlayersRepositoryImpl @Inject constructor(
+    private val playerDao: PlayerDao
+) : PlayersRepository {
     private val currentPlayerId = MutableLiveData<Long>()
     override fun getAllPlayersStream(): Flow<List<Player>> {
         TODO("Not yet implemented")

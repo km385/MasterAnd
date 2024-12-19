@@ -5,9 +5,11 @@ import androidx.lifecycle.ViewModel
 import com.example.masterand.entities.Score
 import com.example.masterand.repositories.PlayersRepository
 import com.example.masterand.repositories.ScoresRepository
+import dagger.hilt.android.lifecycle.HiltViewModel
+import javax.inject.Inject
 
-//@HiltViewModel
-class GameViewModel /*@Inject*/ constructor(
+@HiltViewModel
+class GameViewModel @Inject constructor(
     playersRepository: PlayersRepository,
     private val scoresRepository: ScoresRepository
 ) : ViewModel() {

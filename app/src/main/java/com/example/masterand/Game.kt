@@ -35,10 +35,11 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
-import com.example.masterand.providers.AppViewModelProvider
+//import com.example.masterand.providers.AppViewModelProvider
 import com.example.masterand.viewModels.GameViewModel
 import kotlinx.coroutines.launch
 
@@ -99,7 +100,8 @@ fun checkColors(
 @Composable
 fun GameScreen(
     navController: NavController,
-    viewModel: GameViewModel = viewModel(factory = AppViewModelProvider.Factory),
+//    viewModel: GameViewModel = viewModel(factory = AppViewModelProvider.Factory),
+    viewModel: GameViewModel = hiltViewModel<GameViewModel>(),
     colorCount: Int
 ) {
     val allColors = listOf(Color.Red, Color(0xFFFFA500), Color.Blue, Color.Yellow, Color.Black, Color(0xFF00FFFF))
