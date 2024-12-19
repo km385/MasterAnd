@@ -166,7 +166,7 @@ fun ProfileScreen(
 //                    description = "puste",
 //                    profileUri = imageUri.toString()
 //                )
-                        route = Screen.Profile.route
+                        route = Screen.Profile.passArguments(colors.toInt())
                     )
                 }
 

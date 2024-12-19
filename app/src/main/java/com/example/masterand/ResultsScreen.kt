@@ -1,5 +1,6 @@
 package com.example.masterand
 
+import android.util.Log
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -11,9 +12,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.HorizontalDivider
@@ -43,9 +42,10 @@ import com.example.masterand.viewModels.ResultsViewModel
 @Composable
 fun ResultsScreen(
     navController: NavController,
-    viewModel: ResultsViewModel = viewModel(factory = AppViewModelProvider.Factory)
+    viewModel: ResultsViewModel = viewModel(factory = AppViewModelProvider.Factory),
+    recentScore: Long?,
+    colorCount: Int?
 ) {
-
     val playersFlow = viewModel.loadPlayerScores()
     var playersScore by remember { mutableStateOf(emptyList<PlayerWithScore>()) }
     LaunchedEffect(playersFlow) {
@@ -69,18 +69,18 @@ fun ResultsScreen(
             modifier = Modifier.padding(bottom = 8.dp)
         )
 
-//        // Recent Score
-//        Text(
-//            text = "Recent score: ${viewModel.recentScore}",
-//            fontSize = 20.sp,
-//            modifier = Modifier.padding(bottom = 16.dp)
-//        )
+        if( recentScore != null) {
+            Text(
+                text = "Recent score: $recentScore",
+                fontSize = 20.sp,
+                modifier = Modifier.padding(bottom = 16.dp)
+            )
+        }
 
-        // Score Table
+
         LazyColumn(
             modifier = Modifier
                 .fillMaxWidth()
-//                .weight(1f)
                 .border(1.dp, Color.Gray)
         ) {
             items(playersScore) { playerScore ->
@@ -94,7 +94,10 @@ fun ResultsScreen(
         Spacer(modifier = Modifier.height(24.dp))
 
         Button(
-            onClick = { /* Restart game action */ },
+            onClick = {
+                // TODO(add dynamic colorCount based on the chosen number at the login screen)
+                navController.navigate(route = Screen.Game.passArguments(colorCount = colorCount ?: 5))
+            },
             shape = RoundedCornerShape(50),
             colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF0D75A3))
         ) {
@@ -104,16 +107,27 @@ fun ResultsScreen(
         Spacer(modifier = Modifier.height(8.dp))
 
         Button(
-            onClick = { /* Logout action */ },
+            onClick = {
+                navController.navigate(route = Screen.Login.route)
+            },
             shape = RoundedCornerShape(50),
             colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF0D75A3))
         ) {
             Text(text = "Logout", color = Color.White)
         }
+
+        Button(
+            onClick = {
+                navController.navigate(route = Screen.Profile.passArguments(colorCount = colorCount ?: 5))
+            },
+            shape = RoundedCornerShape(50),
+            colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF0D75A3))
+        ) {
+            Text(text = "Profile", color = Color.White)
+        }
     }
 }
 
-// Row for displaying player name and score
 @Composable
 fun ScoreRow(name: String, score: String) {
     Row(
@@ -129,6 +143,10 @@ fun ScoreRow(name: String, score: String) {
 
 @Composable
 @Preview(showBackground = true)
-fun lolPreview() {
-    ResultsScreen(navController = rememberNavController())
+fun ResultsScreenPreview() {
+    ResultsScreen(
+        navController = rememberNavController(),
+        recentScore = 2L,
+        colorCount = 5
+    )
 }

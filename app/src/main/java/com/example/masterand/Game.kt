@@ -1,5 +1,6 @@
 package com.example.masterand
 
+import android.util.Log
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -98,9 +99,11 @@ fun checkColors(
 @Composable
 fun GameScreen(
     navController: NavController,
-    viewModel: GameViewModel = viewModel(factory = AppViewModelProvider.Factory)
+    viewModel: GameViewModel = viewModel(factory = AppViewModelProvider.Factory),
+    colorCount: Int
 ) {
-    val availableColors = listOf(Color.Red, Color(0xFFFFA500), Color.Blue, Color.Yellow, Color.Black, Color(0xFF00FFFF))
+    val allColors = listOf(Color.Red, Color(0xFFFFA500), Color.Blue, Color.Yellow, Color.Black, Color(0xFF00FFFF))
+    val availableColors = List(colorCount) { index -> allColors[index % allColors.size]}
     val score = remember { mutableIntStateOf(0) }
     var rows = remember {
         mutableStateListOf(
@@ -165,7 +168,6 @@ fun GameScreen(
                         }
 
                         if (feedback.all { it == Color.Red }) {
-                            // TODO("wygrana") // przycisk highscore
                             viewModel.score.longValue = score.intValue.toLong()
                             coroutineScope.launch {
                                 viewModel.savePlayerScore()
@@ -204,14 +206,17 @@ fun GameScreen(
         }
         Spacer(modifier = Modifier.size(20.dp))
         Button(onClick = {
-            navController.popBackStack()
+            navController.navigate(route = Screen.Login.route)
         }) {
             Text("log out")
         }
 
         Spacer(modifier = Modifier.size(20.dp))
         Button(onClick = {
-            navController.navigate(route = Screen.HighScores.route)
+            navController.navigate(
+                route = Screen.HighScores
+                    .passArguments(recentScore = score.intValue.toLong(), colorCount = colorCount)
+            )
         }) {
             Text("High Scores Table")
         }
@@ -328,5 +333,8 @@ fun SmallCircle(color: Color) {
 @Preview(showBackground = true)
 @Composable
 fun GamePreview() {
-    GameScreen(navController = rememberNavController())
+    GameScreen(
+        navController = rememberNavController(),
+        colorCount = 2
+    )
 }

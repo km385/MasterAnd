@@ -1,6 +1,5 @@
 package com.example.masterand
 
-import android.net.Uri
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
@@ -10,16 +9,13 @@ import androidx.navigation.navArgument
 
 
 @Composable
-fun SetupNavGraph(navController: NavHostController){
+fun SetupNavGraph(navController: NavHostController) {
     NavHost(
         navController = navController,
         startDestination = Screen.Login.route
     ) {
         composable(
-            route = Screen.Login.route/*,
-            arguments = listOf(navArgument("login") {
-                type = NavType.StringType
-            })*/
+            route = Screen.Login.route
         ) {
             ProfileScreen(navController = navController)
         }
@@ -27,34 +23,43 @@ fun SetupNavGraph(navController: NavHostController){
         composable(
             route = Screen.Profile.route,
             arguments = listOf(
-                navArgument("login") {type = NavType.StringType},
-                navArgument("description") {type = NavType.StringType},
-                navArgument("profileUri") {
+                navArgument("color_count") { type = NavType.IntType }
+            )
+        ) {backStackEntry ->
+            val colorCount = backStackEntry.arguments?.getInt("color_count")
+            ProfileCard(navController = navController, colorCount = colorCount!!)
+        }
+
+        composable(
+            route = Screen.Game.route,
+            arguments = listOf(
+                navArgument("color_count") { type = NavType.IntType }
+            )
+        ) { backStackEntry ->
+            val colorCount = backStackEntry.arguments?.getInt("color_count")
+            // TODO(change to default value rather then crash)
+            GameScreen(
+                navController = navController,
+                colorCount = colorCount ?: throw IllegalStateException("no color count passed")
+            )
+        }
+
+        composable(route = Screen.HighScores.route,
+            arguments = listOf(
+                navArgument("recent_score") {
                     type = NavType.StringType
                     nullable = true
+                    defaultValue = null
+                },
+                navArgument("color_count") {
+                    type = NavType.StringType
+                    defaultValue = "5"
                 }
             )
-            ){ backStackEntry ->
-            val login = backStackEntry.arguments?.getString("login") ?: ""
-            val description = backStackEntry.arguments?.getString("description") ?: ""
-            val profileUri = backStackEntry.arguments?.getString("profileUri") ?.let {
-                Uri.parse(it)
-            }
-            ProfileCard(
-                navController = navController,
-                login = login,
-                description = description,
-                profileUri = profileUri ?: Uri.EMPTY
-            )
-
-        }
-
-        composable(route = Screen.Game.route) {
-            GameScreen(navController = navController)
-        }
-
-        composable(route = Screen.HighScores.route) {
-            ResultsScreen(navController = navController)
+        ) { backStackEntry ->
+            val recentScore = backStackEntry.arguments?.getString("recent_score")?.toLongOrNull()
+            val colorCount = backStackEntry.arguments?.getString("color_count")?.toIntOrNull()
+            ResultsScreen(navController = navController, recentScore = recentScore, colorCount = colorCount)
         }
     }
 }

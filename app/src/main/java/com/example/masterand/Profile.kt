@@ -45,11 +45,8 @@ private const val TAG = "Profile"
 @Composable
 fun ProfileCard(
     navController: NavController,
-    login: String,
-    description: String,
-    profileUri: Uri,
-    modifier: Modifier = Modifier,
-    viewModel: ProfileViewModel = viewModel(factory = AppViewModelProvider.Factory)
+    viewModel: ProfileViewModel = viewModel(factory = AppViewModelProvider.Factory),
+    colorCount: Int
 ) {
     val coroutineScope = rememberCoroutineScope()
     LaunchedEffect(Unit) {
@@ -121,11 +118,11 @@ fun ProfileCard(
                 }, text = "back")
 
                 FilledButtonExample(onClick = {
-                    navController.navigate(Screen.Game.route)
+                    navController.navigate(Screen.Game.passArguments(colorCount))
                 }, text = "play")
 
                 FilledButtonExample(onClick = {
-                    navController.navigate(Screen.HighScores.route)
+                    navController.navigate(Screen.HighScores.passArguments(recentScore = null, colorCount = colorCount))
                 }, text = "results")
             }
 
@@ -167,12 +164,7 @@ fun FilledButtonExample(onClick: () -> Unit, text:String) {
 @Preview(showBackground = true)
 @Composable
 fun ProfileCardPreview() {
-
-        ProfileCard(
-            navController = rememberNavController(),
-            login = "login",
-            description = "desc",
-            profileUri = Uri.EMPTY
-        )
-
+    ProfileCard(
+        navController = rememberNavController(), colorCount = 2
+    )
 }
