@@ -1,5 +1,11 @@
 package com.example.masterand
 
+import androidx.compose.animation.AnimatedContentTransitionScope
+import androidx.compose.animation.core.EaseIn
+import androidx.compose.animation.core.EaseOut
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
@@ -7,7 +13,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 
-
+// TODO(fix transitions if necessary)
 @Composable
 fun SetupNavGraph(navController: NavHostController) {
     NavHost(
@@ -15,7 +21,19 @@ fun SetupNavGraph(navController: NavHostController) {
         startDestination = Screen.Login.route
     ) {
         composable(
-            route = Screen.Login.route
+            route = Screen.Login.route,
+            enterTransition = {
+                fadeIn() + slideIntoContainer(
+                    towards = AnimatedContentTransitionScope.SlideDirection.Start,
+                    animationSpec = tween(1000, easing = EaseIn)
+                )
+            },
+            exitTransition = {
+                fadeOut() + slideOutOfContainer(
+                    towards = AnimatedContentTransitionScope.SlideDirection.End,
+                    animationSpec = tween(1000, easing = EaseOut)
+                )
+            }
         ) {
             ProfileScreen(navController = navController)
         }
@@ -24,7 +42,19 @@ fun SetupNavGraph(navController: NavHostController) {
             route = Screen.Profile.route,
             arguments = listOf(
                 navArgument("color_count") { type = NavType.IntType }
-            )
+            ),
+            enterTransition = {
+                fadeIn() + slideIntoContainer(
+                    towards = AnimatedContentTransitionScope.SlideDirection.Start,
+                    animationSpec = tween(1000, easing = EaseIn)
+                )
+            },
+            exitTransition = {
+                fadeOut() + slideOutOfContainer(
+                    towards = AnimatedContentTransitionScope.SlideDirection.End,
+                    animationSpec = tween(1000, easing = EaseOut)
+                )
+            }
         ) {backStackEntry ->
             val colorCount = backStackEntry.arguments?.getInt("color_count")
             ProfileCard(navController = navController, colorCount = colorCount!!)
@@ -34,7 +64,19 @@ fun SetupNavGraph(navController: NavHostController) {
             route = Screen.Game.route,
             arguments = listOf(
                 navArgument("color_count") { type = NavType.IntType }
-            )
+            ),
+            enterTransition = {
+                fadeIn() + slideIntoContainer(
+                    towards = AnimatedContentTransitionScope.SlideDirection.Start,
+                    animationSpec = tween(1000, easing = EaseIn)
+                )
+            },
+            exitTransition = {
+                fadeOut() + slideOutOfContainer(
+                    towards = AnimatedContentTransitionScope.SlideDirection.End,
+                    animationSpec = tween(1000, easing = EaseOut)
+                )
+            }
         ) { backStackEntry ->
             val colorCount = backStackEntry.arguments?.getInt("color_count")
             // TODO(change to default value rather then crash)
@@ -55,7 +97,19 @@ fun SetupNavGraph(navController: NavHostController) {
                     type = NavType.StringType
                     defaultValue = "5"
                 }
-            )
+            ),
+            enterTransition = {
+                fadeIn() + slideIntoContainer(
+                    towards = AnimatedContentTransitionScope.SlideDirection.Start,
+                    animationSpec = tween(1000, easing = EaseIn)
+                )
+            },
+            exitTransition = {
+                fadeOut() + slideOutOfContainer(
+                    towards = AnimatedContentTransitionScope.SlideDirection.End,
+                    animationSpec = tween(1000, easing = EaseOut)
+                )
+            }
         ) { backStackEntry ->
             val recentScore = backStackEntry.arguments?.getString("recent_score")?.toLongOrNull()
             val colorCount = backStackEntry.arguments?.getString("color_count")?.toIntOrNull()

@@ -2,12 +2,17 @@ package com.example.masterand
 
 import android.net.Uri
 import android.os.Bundle
-import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.animation.core.FastOutSlowInEasing
+import androidx.compose.animation.core.RepeatMode
+import androidx.compose.animation.core.animateFloat
+import androidx.compose.animation.core.infiniteRepeatable
+import androidx.compose.animation.core.rememberInfiniteTransition
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -35,6 +40,8 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.TransformOrigin
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.KeyboardType
@@ -73,24 +80,6 @@ class MainActivity : ComponentActivity() {
     }
 }
 
-//@Composable
-//fun FirstScreenInitialll(
-//    navController: NavController
-//) {
-//    Column(
-////        modifier = Modifier.fillMaxSize(),
-//        horizontalAlignment = Alignment.CenterHorizontally,
-//        verticalArrangement = Arrangement.Center
-//    ) {
-//        Button(
-//            onClick = { navController.navigate(route = Screen.Game.route)
-//            }
-//        ) {
-//            Text(text = "Kliknij mnie i zobacz co się stanie!")
-//        }
-//    }
-//}
-
 @Composable
 fun ProfileScreen(
     navController: NavController,
@@ -110,6 +99,17 @@ fun ProfileScreen(
 
     val coroutineScope = rememberCoroutineScope()
 
+    val infiniteScaleAnimation = rememberInfiniteTransition(label = "infiniteScaleTitle")
+    val titleScale by infiniteScaleAnimation.animateFloat(
+        initialValue = 1.0f,
+        targetValue = 1.2f,
+        animationSpec = infiniteRepeatable(
+            animation = tween(durationMillis = 1000, easing = FastOutSlowInEasing),
+            repeatMode = RepeatMode.Reverse
+        ),
+        label = "titleScale"
+    )
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -120,7 +120,13 @@ fun ProfileScreen(
     ) {
         Text(
             text = "MasterAnd",
-            style = MaterialTheme.typography.displayLarge
+            style = MaterialTheme.typography.displayLarge,
+            modifier = Modifier
+                .graphicsLayer(
+                    scaleX = titleScale,
+                    scaleY = titleScale,
+                    transformOrigin = TransformOrigin.Center
+                )
         )
 
         ProfileImageWithPicker(
@@ -164,11 +170,6 @@ fun ProfileScreen(
                 coroutineScope.launch {
                     viewModel.savePlayer()
                     navController.navigate(
-//                route = Screen.Second.passArguments(
-//                    login = name,
-//                    description = "puste",
-//                    profileUri = imageUri.toString()
-//                )
                         route = Screen.Profile.passArguments(colors.toInt())
                     )
                 }

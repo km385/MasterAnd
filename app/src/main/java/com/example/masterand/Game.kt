@@ -1,6 +1,11 @@
 package com.example.masterand
 
-import android.util.Log
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.MutableTransitionState
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.expandVertically
+import androidx.compose.animation.scaleIn
+import androidx.compose.animation.scaleOut
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -24,10 +29,14 @@ import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -169,6 +178,8 @@ fun GameScreen(
                             ))
                         }
 
+                        score.value += 1
+
                         if (feedback.all { it == Color.Red }) {
                             viewModel.score.longValue = score.intValue.toLong()
                             coroutineScope.launch {
@@ -176,7 +187,6 @@ fun GameScreen(
                             }
 
                         }
-                        score.value += 1
                     }
                 )
             }
@@ -233,25 +243,54 @@ fun GameRow(
     onSelectColorClick: (index: Int) -> Unit,
     onCheckClick: () -> Unit
     ) {
-    Row(
-        horizontalArrangement = Arrangement.spacedBy(16.dp),
-        verticalAlignment = Alignment.CenterVertically,
-        modifier = Modifier.fillMaxWidth()
-    ) {
-        SelectableColorsRow(selectedColors) { index -> onSelectColorClick(index) }
-        IconButton(
-            onClick = { onCheckClick() },
-            modifier = Modifier
-                .clip(CircleShape)
-                .size(50.dp)
-                .background(color = MaterialTheme.colorScheme.background),
-            colors = IconButtonDefaults.filledIconButtonColors(),
-            enabled = clickable
-        ) {
-            Icon(Icons.Filled.Check, contentDescription = "")
-        }
-        FeedbackCircles(feedbackColors)
+    var isRowVisible by remember { mutableStateOf(false) }
 
+
+    val isButtonEnabled = clickable && !selectedColors.contains(Color.White)
+    val submitButtonVisibleState = remember { MutableTransitionState(false) }
+    if (submitButtonVisibleState.targetState != isButtonEnabled)
+        submitButtonVisibleState.targetState = isButtonEnabled
+    LaunchedEffect(Unit) { isRowVisible = true }
+
+    AnimatedVisibility(
+        visible = isRowVisible,
+        enter = expandVertically(
+            expandFrom = Alignment.Top,
+            animationSpec = tween(500)
+        )
+    ) {
+        Row(
+            horizontalArrangement = Arrangement.spacedBy(16.dp),
+            verticalAlignment = Alignment.CenterVertically,
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            SelectableColorsRow(selectedColors) { index -> onSelectColorClick(index) }
+
+            AnimatedVisibility(
+                visibleState = submitButtonVisibleState,
+                enter = scaleIn(animationSpec = tween(1000)),
+                exit = scaleOut(animationSpec = tween(1000))
+            ) {
+                CheckButton(onCheckClick, clickable)
+            }
+
+            FeedbackCircles(feedbackColors)
+        }
+    }
+}
+
+@Composable
+private fun CheckButton(onCheckClick: () -> Unit, clickable: Boolean) {
+    IconButton(
+        onClick = { onCheckClick() },
+        modifier = Modifier
+            .clip(CircleShape)
+            .size(50.dp)
+            .background(color = MaterialTheme.colorScheme.background),
+        colors = IconButtonDefaults.filledIconButtonColors(),
+        enabled = clickable
+    ) {
+        Icon(Icons.Filled.Check, contentDescription = "Check")
     }
 }
 
