@@ -1,5 +1,7 @@
 package com.example.masterand
 
+//import androidx.lifecycle.viewmodel.compose.viewModel
+//import com.example.masterand.providers.AppViewModelProvider
 import android.net.Uri
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -47,13 +49,10 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import coil.compose.AsyncImage
-//import com.example.masterand.providers.AppViewModelProvider
 import com.example.masterand.ui.theme.MasterAndTheme
 import com.example.masterand.viewModels.ProfileViewModel
 import dagger.hilt.android.AndroidEntryPoint

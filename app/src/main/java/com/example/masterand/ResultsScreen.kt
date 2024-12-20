@@ -1,6 +1,7 @@
 package com.example.masterand
 
-import android.util.Log
+//import androidx.lifecycle.viewmodel.compose.viewModel
+//import com.example.masterand.providers.AppViewModelProvider
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -33,11 +34,9 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.example.masterand.entities.PlayerWithScore
-//import com.example.masterand.providers.AppViewModelProvider
 import com.example.masterand.viewModels.ResultsViewModel
 
 

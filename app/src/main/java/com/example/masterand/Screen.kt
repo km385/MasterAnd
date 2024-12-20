@@ -1,7 +1,5 @@
 package com.example.masterand
 
-import android.net.Uri
-
 sealed class Screen(val route: String) {
 
     object Login: Screen(route = "first_screen")

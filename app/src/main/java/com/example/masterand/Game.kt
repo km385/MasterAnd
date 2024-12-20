@@ -1,6 +1,7 @@
 package com.example.masterand
 
 //import com.example.masterand.providers.AppViewModelProvider
+//import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.compose.animation.Animatable
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.animateColorAsState
@@ -57,8 +58,6 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.example.masterand.viewModels.GameViewModel
 import kotlinx.coroutines.launch
-
-private const val TAG = "Game"
 
 data class RowState(
     val selectedColors: List<Color>,
@@ -119,7 +118,11 @@ fun GameScreen(
     viewModel: GameViewModel = hiltViewModel<GameViewModel>(),
     colorCount: Int
 ) {
-    val allColors = listOf(Color.Red, Color(0xFFFFA500), Color.Blue, Color.Yellow, Color.Black, Color(0xFF00FFFF))
+    val allColors = listOf(
+        Color.Red, Color(0xFFFFA500),
+        Color.Blue, Color.Yellow,
+        Color.Black, Color(0xFF00FFFF)
+    )
     val availableColors = List(colorCount) { index -> allColors[index % allColors.size]}
     val score = remember { mutableIntStateOf(0) }
     var isGameOver = remember { mutableStateOf(false) }
@@ -227,7 +230,7 @@ fun GameScreen(
             }
 
             Button(onClick = {
-                // TODO("comment out when shipping to prod")
+//                 TODO("comment out when shipping to prod")
                 viewModel.score.longValue = 12
 //                    viewModel.score.longValue = score.intValue.toLong()
                 coroutineScope.launch {
@@ -240,13 +243,9 @@ fun GameScreen(
 
             Row(
                 modifier = Modifier
-                    .fillMaxWidth()
-                    ,
-                horizontalArrangement = Arrangement.Center
-                ,
-
-            ) {
-
+                    .fillMaxWidth(),
+                horizontalArrangement = Arrangement.Center,
+                ) {
 
                 Button(onClick = {
                     navController.navigate(route = Screen.Login.route)
@@ -271,6 +270,7 @@ fun GameScreen(
                 }
 
                 Spacer(modifier = Modifier.width(8.dp))
+
                 Button(onClick = {
                     navController.navigate(route = Screen.Profile.passArguments(colorCount = colorCount))
                 }) {
@@ -293,13 +293,14 @@ fun GameRow(
     clickable: Boolean,
     onSelectColorClick: (index: Int) -> Unit,
     onCheckClick: () -> Unit
-    ) {
+) {
     var isRowVisible by remember { mutableStateOf(false) }
     val isButtonEnabled = clickable && !selectedColors.contains(Color.White)
-
     val checkButtonState = remember { MutableTransitionState(false) }
-    if (checkButtonState.targetState != isButtonEnabled)
+
+    if (checkButtonState.targetState != isButtonEnabled) {
         checkButtonState.targetState = isButtonEnabled
+    }
     LaunchedEffect(Unit) { isRowVisible = true }
 
     AnimatedVisibility(

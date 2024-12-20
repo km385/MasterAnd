@@ -1,6 +1,5 @@
 package com.example.masterand.viewModels
 
-import android.util.Log
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import com.example.masterand.entities.Player

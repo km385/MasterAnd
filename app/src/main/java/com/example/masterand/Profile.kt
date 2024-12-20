@@ -105,7 +105,7 @@ fun ProfileCard(
                     Text(email)
                 }
             }
-
+//            TODO(change layout to resemble the other screens?)
             Spacer(modifier = Modifier.height(16.dp))
             Row(
                 modifier = Modifier.fillMaxWidth(),
