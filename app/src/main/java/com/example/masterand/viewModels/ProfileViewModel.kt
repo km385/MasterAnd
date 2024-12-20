@@ -48,7 +48,9 @@ class ProfileViewModel @Inject constructor(
         } else {
             player = players.first()
             player.name = name.value
-            player.profileImageUri = imageUri.value
+            if(imageUri.value != "null") {
+                player.profileImageUri = imageUri.value
+            }
             playersRepository.update(player)
         }
         playersRepository.setCurrentPlayerId(player.playerId)

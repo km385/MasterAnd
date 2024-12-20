@@ -3,12 +3,14 @@ package com.example.masterand
 import android.util.Log
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -55,75 +57,83 @@ fun ResultsScreen(
         }
     }
 
-    Column(
+    Box(
         modifier = Modifier
             .fillMaxSize()
-            .padding(16.dp),
-        horizontalAlignment = Alignment.CenterHorizontally
+            .navigationBarsPadding()
     ) {
-        Text(
-            text = "Results",
-            fontSize = 32.sp,
-            fontWeight = FontWeight.Bold,
-            modifier = Modifier.padding(bottom = 8.dp)
-        )
-
-        if( recentScore != null) {
-            Text(
-                text = "Recent score: $recentScore",
-                fontSize = 20.sp,
-                modifier = Modifier.padding(bottom = 16.dp)
-            )
-        }
-
-
-        LazyColumn(
+        Column(
             modifier = Modifier
-                .fillMaxWidth()
-                .border(1.dp, Color.Gray)
+                .fillMaxSize()
+                .padding(16.dp),
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            items(playersScore) { playerScore ->
-                ScoreRow(playerScore.playerName, playerScore.score.toString())
-                HorizontalDivider()
+            Text(
+                text = "Results",
+                fontSize = 32.sp,
+                fontWeight = FontWeight.Bold,
+                modifier = Modifier.padding(bottom = 8.dp)
+            )
+
+            if( recentScore != null) {
+                Text(
+                    text = "Recent score: $recentScore",
+                    fontSize = 20.sp,
+                    modifier = Modifier.padding(bottom = 16.dp)
+                )
             }
+
+
+            LazyColumn(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .weight(1f)
+                    .border(1.dp, Color.Gray)
+            ) {
+                items(playersScore) { playerScore ->
+                    ScoreRow(playerScore.playerName, playerScore.score.toString())
+                    HorizontalDivider()
+                }
+            }
+
+
+
+            Spacer(modifier = Modifier.height(24.dp))
+            Row {
+                Button(
+                    onClick = {
+                        navController.navigate(route = Screen.Game.passArguments(colorCount = colorCount ?: 5))
+                    },
+                    shape = RoundedCornerShape(50),
+                    colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF0D75A3))
+                ) {
+                    Text(text = "New Game", color = Color.White)
+                }
+
+
+                Button(
+                    onClick = {
+                        navController.navigate(route = Screen.Login.route)
+                    },
+                    shape = RoundedCornerShape(50),
+                    colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF0D75A3))
+                ) {
+                    Text(text = "Logout", color = Color.White)
+                }
+
+                Button(
+                    onClick = {
+                        navController.navigate(route = Screen.Profile.passArguments(colorCount = colorCount ?: 5))
+                    },
+                    shape = RoundedCornerShape(50),
+                    colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF0D75A3))
+                ) {
+                    Text(text = "Profile", color = Color.White)
+                }
+            }
+
         }
 
-
-
-        Spacer(modifier = Modifier.height(24.dp))
-
-        Button(
-            onClick = {
-                // TODO(add dynamic colorCount based on the chosen number at the login screen)
-                navController.navigate(route = Screen.Game.passArguments(colorCount = colorCount ?: 5))
-            },
-            shape = RoundedCornerShape(50),
-            colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF0D75A3))
-        ) {
-            Text(text = "Restart game", color = Color.White)
-        }
-
-        Spacer(modifier = Modifier.height(8.dp))
-
-        Button(
-            onClick = {
-                navController.navigate(route = Screen.Login.route)
-            },
-            shape = RoundedCornerShape(50),
-            colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF0D75A3))
-        ) {
-            Text(text = "Logout", color = Color.White)
-        }
-
-        Button(
-            onClick = {
-                navController.navigate(route = Screen.Profile.passArguments(colorCount = colorCount ?: 5))
-            },
-            shape = RoundedCornerShape(50),
-            colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF0D75A3))
-        ) {
-            Text(text = "Profile", color = Color.White)
-        }
     }
 }
 

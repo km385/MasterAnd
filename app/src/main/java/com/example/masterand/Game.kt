@@ -19,9 +19,12 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
@@ -119,6 +122,7 @@ fun GameScreen(
     val allColors = listOf(Color.Red, Color(0xFFFFA500), Color.Blue, Color.Yellow, Color.Black, Color(0xFF00FFFF))
     val availableColors = List(colorCount) { index -> allColors[index % allColors.size]}
     val score = remember { mutableIntStateOf(0) }
+    var isGameOver = remember { mutableStateOf(false) }
     var rows = remember {
         mutableStateListOf(
             RowState(
@@ -132,110 +136,153 @@ fun GameScreen(
 
     val correctColors = remember { selectRandomColors(availableColors) }
 
-    Column(
-        horizontalAlignment = Alignment.CenterHorizontally
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .navigationBarsPadding()
     ) {
-        Text(
-            text = "Your score: ${score.intValue}",
-            fontSize = 30.sp
-        )
-        LazyColumn {
-            items(rows.size) { rowIndex ->
-                val rowState = rows[rowIndex]
-                Spacer(modifier = Modifier.size(25.dp))
-                GameRow(
-                    selectedColors = rowState.selectedColors,
-                    clickable = rowState.isClickable,
-                    feedbackColors = rowState.feedbackColors,
-                    onSelectColorClick = { index ->
-                        if (!rowState.isClickable) {
-                            return@GameRow
-                        }
-                        val newSelectedColors = rowState.selectedColors.toMutableList().apply {
-                            this[index] = selectNextAvailableColor(
-                                availableColors = availableColors,
-                                selectedColors = this,
-                                buttonIndex = index
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            Text(
+                text = "Your score: ${score.intValue}",
+                fontSize = 30.sp
+            )
+            LazyColumn(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .weight(1f)
+            ) {
+                items(rows.size) { rowIndex ->
+                    val rowState = rows[rowIndex]
+                    Spacer(modifier = Modifier.size(25.dp))
+                    GameRow(
+                        selectedColors = rowState.selectedColors,
+                        clickable = rowState.isClickable,
+                        feedbackColors = rowState.feedbackColors,
+                        onSelectColorClick = { index ->
+                            if (!rowState.isClickable) {
+                                return@GameRow
+                            }
+                            val newSelectedColors = rowState.selectedColors.toMutableList().apply {
+                                this[index] = selectNextAvailableColor(
+                                    availableColors = availableColors,
+                                    selectedColors = this,
+                                    buttonIndex = index
+                                )
+                            }
+                            rows[rowIndex] = rowState.copy(
+                                selectedColors = newSelectedColors
                             )
-                        }
-                        rows[rowIndex] = rowState.copy(
-                            selectedColors = newSelectedColors
-                        )
-                    },
-                    onCheckClick = {
-                        if (!rowState.isClickable || rowState.selectedColors.contains(Color.White)) {
-                            return@GameRow
-                        }
-
-                        val feedback = checkColors(rowState.selectedColors, correctColors, Color.White)
-                        rows[rowIndex] = rowState.copy(
-                            feedbackColors = feedback,
-                            isClickable = false
-                        )
-
-                        if (!feedback.all { it == Color.Red }) {
-                            rows.add(RowState(
-                                selectedColors = List(4) { Color.White },
-                                feedbackColors = List(4) { Color.White },
-                                isClickable = true
-                            ))
-                        }
-
-                        score.value += 1
-
-                        if (feedback.all { it == Color.Red }) {
-                            viewModel.score.longValue = score.intValue.toLong()
-                            coroutineScope.launch {
-                                viewModel.savePlayerScore()
+                        },
+                        onCheckClick = {
+                            if (!rowState.isClickable || rowState.selectedColors.contains(Color.White)) {
+                                return@GameRow
                             }
 
+                            val feedback = checkColors(rowState.selectedColors, correctColors, Color.White)
+                            rows[rowIndex] = rowState.copy(
+                                feedbackColors = feedback,
+                                isClickable = false
+                            )
+
+                            if (!feedback.all { it == Color.Red }) {
+                                rows.add(RowState(
+                                    selectedColors = List(4) { Color.White },
+                                    feedbackColors = List(4) { Color.White },
+                                    isClickable = true
+                                ))
+                            }
+
+                            score.value += 1
+
+                            if (feedback.all { it == Color.Red }) {
+                                viewModel.score.longValue = score.intValue.toLong()
+                                isGameOver.value = true
+                                coroutineScope.launch {
+                                    viewModel.savePlayerScore()
+                                }
+
+                            }
                         }
-                    }
-                )
+                    )
+                }
+
             }
 
-        }
 
-        Button(onClick = {
-            // TODO("comment out when shipping to prod")
-            viewModel.score.longValue = 12
-//            viewModel.score.longValue = score.intValue.toLong()
-            coroutineScope.launch {
-                viewModel.savePlayerScore()
+            if (isGameOver.value) {
+                Button(onClick = {
+                    navController.navigate(
+                        route = Screen.HighScores
+                            .passArguments(
+                                recentScore = score.intValue.toLong(),
+                                colorCount = colorCount
+                            )
+                    )
+                }) {
+                    Text("High Scores")
+                }
+
             }
-        }) {
-            Text("test save score")
+
+            Button(onClick = {
+                // TODO("comment out when shipping to prod")
+                viewModel.score.longValue = 12
+//                    viewModel.score.longValue = score.intValue.toLong()
+                coroutineScope.launch {
+                    viewModel.savePlayerScore()
+                }
+            }) {
+                Text("+")
+            }
+
+
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    ,
+                horizontalArrangement = Arrangement.Center
+                ,
+
+            ) {
+
+
+                Button(onClick = {
+                    navController.navigate(route = Screen.Login.route)
+                }) {
+                    Text("Log out")
+                }
+
+                Spacer(modifier = Modifier.width(8.dp))
+
+                Button(onClick = {
+                    rows.clear()
+                    rows.add(
+                        RowState(
+                            selectedColors = List(4) { Color.White },
+                            feedbackColors = List(4) { Color.White },
+                            isClickable = true
+                        )
+                    )
+                    score.intValue = 0
+                }) {
+                    Text("Replay")
+                }
+
+                Spacer(modifier = Modifier.width(8.dp))
+                Button(onClick = {
+                    navController.navigate(route = Screen.Profile.passArguments(colorCount = colorCount))
+                }) {
+                    Text("Profile")
+                }
+
+
+            }
+
+
         }
 
-        Button(onClick = {
-            rows.clear()
-            rows.add(
-                RowState(
-                    selectedColors = List(4) { Color.White },
-                    feedbackColors = List(4) { Color.White },
-                    isClickable = true
-                )
-            )
-            score.value = 0
-        }) {
-            Text("replay")
-        }
-        Spacer(modifier = Modifier.size(20.dp))
-        Button(onClick = {
-            navController.navigate(route = Screen.Login.route)
-        }) {
-            Text("log out")
-        }
-
-        Spacer(modifier = Modifier.size(20.dp))
-        Button(onClick = {
-            navController.navigate(
-                route = Screen.HighScores
-                    .passArguments(recentScore = score.intValue.toLong(), colorCount = colorCount)
-            )
-        }) {
-            Text("High Scores Table")
-        }
     }
 }
 
