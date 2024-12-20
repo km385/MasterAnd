@@ -1,7 +1,11 @@
 package com.example.masterand
 
+//import com.example.masterand.providers.AppViewModelProvider
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.MutableTransitionState
+import androidx.compose.animation.core.RepeatMode
+import androidx.compose.animation.core.repeatable
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.expandVertically
 import androidx.compose.animation.scaleIn
@@ -45,10 +49,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
-//import com.example.masterand.providers.AppViewModelProvider
 import com.example.masterand.viewModels.GameViewModel
 import kotlinx.coroutines.launch
 
@@ -213,6 +215,7 @@ fun GameScreen(
                     isClickable = true
                 )
             )
+            score.value = 0
         }) {
             Text("replay")
         }
@@ -244,12 +247,11 @@ fun GameRow(
     onCheckClick: () -> Unit
     ) {
     var isRowVisible by remember { mutableStateOf(false) }
-
-
     val isButtonEnabled = clickable && !selectedColors.contains(Color.White)
-    val submitButtonVisibleState = remember { MutableTransitionState(false) }
-    if (submitButtonVisibleState.targetState != isButtonEnabled)
-        submitButtonVisibleState.targetState = isButtonEnabled
+
+    val checkButtonState = remember { MutableTransitionState(false) }
+    if (checkButtonState.targetState != isButtonEnabled)
+        checkButtonState.targetState = isButtonEnabled
     LaunchedEffect(Unit) { isRowVisible = true }
 
     AnimatedVisibility(
@@ -267,7 +269,7 @@ fun GameRow(
             SelectableColorsRow(selectedColors) { index -> onSelectColorClick(index) }
 
             AnimatedVisibility(
-                visibleState = submitButtonVisibleState,
+                visibleState = checkButtonState,
                 enter = scaleIn(animationSpec = tween(1000)),
                 exit = scaleOut(animationSpec = tween(1000))
             ) {
@@ -325,15 +327,38 @@ fun FeedbackCircles(colors: List<Color>) {
 }
 
 
+
 @Composable
 fun SelectableColorsRow(colors: List<Color>, onClick: (Int) -> Unit) {
+    // TODO(possible fix needed, shows previous color, but whatever)
+    var selectedColorIndex by remember { mutableIntStateOf(-1) }
+
     Row(
         horizontalArrangement = Arrangement.spacedBy(5.dp)
     ) {
-        colors.forEachIndexed() { index, color ->
+        colors.forEachIndexed { index, color ->
+            val isSelected = selectedColorIndex == index
+
+            val animatedColor by animateColorAsState(
+                targetValue = color,
+                animationSpec = if (isSelected) {
+                    repeatable(
+                        iterations = 5,
+                        animation = tween(durationMillis = 500),
+                        repeatMode = RepeatMode.Reverse
+                    )
+                } else {
+                    tween(0)
+                },
+                label = "$index"
+            )
+
             CircularButton(
-                onClick = { onClick(index) },
-                color = color
+                onClick = {
+                    selectedColorIndex = index
+                    onClick(index)
+                },
+                color = animatedColor
             )
         }
     }
