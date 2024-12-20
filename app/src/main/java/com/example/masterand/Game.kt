@@ -1,6 +1,7 @@
 package com.example.masterand
 
 //import com.example.masterand.providers.AppViewModelProvider
+import androidx.compose.animation.Animatable
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.MutableTransitionState
@@ -298,6 +299,13 @@ private fun CheckButton(onCheckClick: () -> Unit, clickable: Boolean) {
 
 @Composable
 fun FeedbackCircles(colors: List<Color>) {
+    val colorAnimations = List(4) { remember { Animatable(Color.White) } }
+    LaunchedEffect(colors) {
+        colorAnimations.forEachIndexed { index, animation ->
+            animation.animateTo(colors[index], animationSpec = tween(250))
+        }
+    }
+
     Column(
         verticalArrangement = Arrangement.spacedBy(5.dp)
     ) {
@@ -306,10 +314,10 @@ fun FeedbackCircles(colors: List<Color>) {
             modifier = Modifier.padding(bottom = 5.dp)
         ) {
             if (colors.isNotEmpty()) {
-                SmallCircle(color = colors[0])
+                SmallCircle(color = colorAnimations[0].value)
             }
             if (colors.size > 1) {
-                SmallCircle(color = colors[1])
+                SmallCircle(color = colorAnimations[1].value)
             }
         }
 
@@ -317,16 +325,15 @@ fun FeedbackCircles(colors: List<Color>) {
             horizontalArrangement = Arrangement.spacedBy(5.dp)
         ) {
             if (colors.size > 2) {
-                SmallCircle(color = colors[2])
+                SmallCircle(color = colorAnimations[2].value)
             }
             if (colors.size > 3) {
-                SmallCircle(color = colors[3])
+                SmallCircle(color = colorAnimations[3].value)
             }
         }
     }
+
 }
-
-
 
 @Composable
 fun SelectableColorsRow(colors: List<Color>, onClick: (Int) -> Unit) {
