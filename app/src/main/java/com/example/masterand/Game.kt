@@ -123,7 +123,7 @@ fun GameScreen(
         Color.Blue, Color.Yellow,
         Color.Black, Color(0xFF00FFFF)
     )
-    val availableColors = List(colorCount) { index -> allColors[index % allColors.size]}
+    val availableColors = List(colorCount) { index -> allColors[index % allColors.size] }
     val score = remember { mutableIntStateOf(0) }
     var isGameOver = remember { mutableStateOf(false) }
     var rows = remember {
@@ -190,11 +190,13 @@ fun GameScreen(
                             )
 
                             if (!feedback.all { it == Color.Red }) {
-                                rows.add(RowState(
-                                    selectedColors = List(4) { Color.White },
-                                    feedbackColors = List(4) { Color.White },
-                                    isClickable = true
-                                ))
+                                rows.add(
+                                    RowState(
+                                        selectedColors = List(4) { Color.White },
+                                        feedbackColors = List(4) { Color.White },
+                                        isClickable = true
+                                    )
+                                )
                             }
 
                             score.value += 1
@@ -205,34 +207,31 @@ fun GameScreen(
                                 coroutineScope.launch {
                                     viewModel.savePlayerScore()
                                 }
-
                             }
                         }
                     )
                 }
-
             }
 
-
             if (isGameOver.value) {
-                Button(onClick = {
-                    navController.navigate(
-                        route = Screen.HighScores
-                            .passArguments(
-                                recentScore = score.intValue.toLong(),
-                                colorCount = colorCount
-                            )
-                    )
-                }) {
-                    Text("High Scores")
-                }
-
+                FilledButton(
+                    onClick = {
+                        navController.navigate(
+                            route = Screen.HighScores
+                                .passArguments(
+                                    recentScore = score.intValue.toLong(),
+                                    colorCount = colorCount
+                                )
+                        )
+                    },
+                    text = "High Scores"
+                )
             }
 
             Button(onClick = {
-//                 TODO("comment out when shipping to prod")
+                // TODO: Comment out when shipping to prod
                 viewModel.score.longValue = 12
-//                    viewModel.score.longValue = score.intValue.toLong()
+                // viewModel.score.longValue = score.intValue.toLong()
                 coroutineScope.launch {
                     viewModel.savePlayerScore()
                 }
@@ -240,50 +239,47 @@ fun GameScreen(
                 Text("+")
             }
 
-
             Row(
                 modifier = Modifier
                     .fillMaxWidth(),
                 horizontalArrangement = Arrangement.Center,
-                ) {
-
-                Button(onClick = {
-                    navController.navigate(route = Screen.Login.route)
-                }) {
-                    Text("Log out")
-                }
+            ) {
+                FilledButton(
+                    onClick = {
+                        navController.navigate(route = Screen.Login.route)
+                    },
+                    text = "Log out"
+                )
 
                 Spacer(modifier = Modifier.width(8.dp))
 
-                Button(onClick = {
-                    rows.clear()
-                    rows.add(
-                        RowState(
-                            selectedColors = List(4) { Color.White },
-                            feedbackColors = List(4) { Color.White },
-                            isClickable = true
+                FilledButton(
+                    onClick = {
+                        rows.clear()
+                        rows.add(
+                            RowState(
+                                selectedColors = List(4) { Color.White },
+                                feedbackColors = List(4) { Color.White },
+                                isClickable = true
+                            )
                         )
-                    )
-                    score.intValue = 0
-                }) {
-                    Text("Replay")
-                }
+                        score.intValue = 0
+                    },
+                    text = "Replay"
+                )
 
                 Spacer(modifier = Modifier.width(8.dp))
 
-                Button(onClick = {
-                    navController.navigate(route = Screen.Profile.passArguments(colorCount = colorCount))
-                }) {
-                    Text("Profile")
-                }
-
-
+                FilledButton(
+                    onClick = {
+                        navController.navigate(route = Screen.Profile.passArguments(colorCount = colorCount))
+                    },
+                    text = "Profile"
+                )
             }
-
-
         }
-
     }
+
 }
 
 @Composable
@@ -444,9 +440,7 @@ fun SmallCircle(color: Color) {
             .clip(CircleShape)
             .background(color)
             .border(
-                width = 2.dp,
-                color = MaterialTheme.colorScheme.outline,
-                shape = CircleShape
+                width = 2.dp, color = MaterialTheme.colorScheme.outline, shape = CircleShape
             )
     )
 }

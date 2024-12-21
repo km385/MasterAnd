@@ -15,9 +15,6 @@ import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -98,37 +95,38 @@ fun ResultsScreen(
 
 
             Spacer(modifier = Modifier.height(24.dp))
-            Row {
-                Button(
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceEvenly
+            ) {
+                FilledButton(
                     onClick = {
-                        navController.navigate(route = Screen.Game.passArguments(colorCount = colorCount ?: 5))
-                    },
-                    shape = RoundedCornerShape(50),
-                    colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF0D75A3))
-                ) {
-                    Text(text = "New Game", color = Color.White)
-                }
+                        navController.navigate(
+                            route = Screen.Game.passArguments(
+                                colorCount = colorCount ?: 5
+                            )
+                        )
+                    }, text = "New Game"
+                )
 
 
-                Button(
+                FilledButton(
                     onClick = {
                         navController.navigate(route = Screen.Login.route)
                     },
-                    shape = RoundedCornerShape(50),
-                    colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF0D75A3))
-                ) {
-                    Text(text = "Logout", color = Color.White)
-                }
+                    text = "Logout"
+                )
 
-                Button(
+                FilledButton(
                     onClick = {
-                        navController.navigate(route = Screen.Profile.passArguments(colorCount = colorCount ?: 5))
+                        navController.navigate(
+                            route = Screen.Profile.passArguments(
+                                colorCount = colorCount ?: 5
+                            )
+                        )
                     },
-                    shape = RoundedCornerShape(50),
-                    colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF0D75A3))
-                ) {
-                    Text(text = "Profile", color = Color.White)
-                }
+                    text = "Profile"
+                )
             }
 
         }

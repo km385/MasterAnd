@@ -49,6 +49,8 @@ class ProfileViewModel @Inject constructor(
             player.name = name.value
             if(imageUri.value != "null") {
                 player.profileImageUri = imageUri.value
+            } else {
+                imageUri.value = player.profileImageUri
             }
             playersRepository.update(player)
         }

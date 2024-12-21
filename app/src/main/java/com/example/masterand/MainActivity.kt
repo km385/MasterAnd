@@ -24,15 +24,21 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Warning
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -42,6 +48,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.TransformOrigin
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.ContentScale
@@ -51,6 +58,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.navigation.NavHostController
+import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import coil.compose.AsyncImage
 import com.example.masterand.ui.theme.MasterAndTheme
@@ -67,17 +75,46 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             MasterAndTheme {
-//                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-//                    ProfileScreen()
-//                }
                 navController = rememberNavController()
-                SetupNavGraph(navController = navController)
+                BaseScreen(navController = navController)
             }
 
         }
 
     }
 }
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun BaseScreen(navController: NavHostController) {
+    val currentBackStackEntry by navController.currentBackStackEntryAsState()
+    val currentDestination = currentBackStackEntry?.destination
+
+    val screenTitles = mapOf(
+        Screen.Login.route to "Login",
+        Screen.Profile.route to "Profile",
+        Screen.Game.route to "Game Screen",
+        Screen.HighScores.route to "High Scores"
+    )
+
+    val title = screenTitles[currentDestination?.route] ?: "MasterAnd"
+
+    Scaffold(
+        topBar = {
+            TopAppBar(
+                title = { Text(title) },
+                colors = TopAppBarDefaults.topAppBarColors(
+                    containerColor = Color(0xFF0D75A3),
+                ),
+            )
+        }
+    ) { paddingValues ->
+        Box(modifier = Modifier.padding(paddingValues)) {
+            SetupNavGraph(navController = navController)
+        }
+    }
+}
+
 
 @Composable
 fun ProfileScreen(
@@ -166,6 +203,7 @@ fun ProfileScreen(
                 viewModel.name.value = name
                 viewModel.imageUri.value = imageUri.toString()
 
+
                 coroutineScope.launch {
                     viewModel.savePlayer()
                     navController.navigate(
@@ -175,6 +213,8 @@ fun ProfileScreen(
 
             },
             modifier = Modifier.fillMaxWidth(),
+            shape = RoundedCornerShape(50),
+            colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF0D75A3)),
             enabled = isNameValid && isEmailValid && isColorsValid
         ) {
             Text("Next")

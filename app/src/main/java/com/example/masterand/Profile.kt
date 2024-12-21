@@ -2,6 +2,7 @@ package com.example.masterand
 
 //import com.example.masterand.providers.AppViewModelProvider
 //import androidx.lifecycle.viewmodel.compose.viewModel
+import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -14,9 +15,11 @@ import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -28,6 +31,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -50,13 +54,14 @@ fun ProfileCard(
     LaunchedEffect(Unit) {
         viewModel.loadPlayer()
     }
-
     val name by viewModel.name
     val email by viewModel.email
     val imageUri by viewModel.imageUri
 
     Surface(
-        modifier = Modifier.fillMaxSize().navigationBarsPadding(),
+        modifier = Modifier
+            .fillMaxSize()
+            .navigationBarsPadding(),
         color = MaterialTheme.colorScheme.background
     ) {
         Column(
@@ -79,6 +84,7 @@ fun ProfileCard(
                 ) {
 
                     if (imageUri != "null") {
+                        Log.i("lol", "ProfileCard: async")
                         AsyncImage(
                             model = imageUri,
                             contentDescription = "Profile Image",
@@ -105,25 +111,24 @@ fun ProfileCard(
                     Text(email)
                 }
             }
-//            TODO(change layout to resemble the other screens?)
             Spacer(modifier = Modifier.height(16.dp))
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceEvenly
             ) {
-                FilledButtonExample(onClick = {
+                FilledButton(onClick = {
                     navController.navigate(route = Screen.Login.route)
                 }, text = "Log out")
 
-                FilledButtonExample(onClick = {
+                FilledButton(onClick = {
                     navController.navigate(Screen.Game
                         .passArguments(colorCount))
                 }, text = "Play")
 
-                FilledButtonExample(onClick = {
+                FilledButton(onClick = {
                     navController.navigate(Screen.HighScores
                         .passArguments(recentScore = null, colorCount = colorCount))
-                }, text = "Results")
+                }, text = "High Scores")
             }
 
         }
@@ -155,8 +160,12 @@ fun Example(onClick: () -> Unit) {
 
 
 @Composable
-fun FilledButtonExample(onClick: () -> Unit, text:String) {
-    Button(onClick = { onClick() }) {
+fun FilledButton(onClick: () -> Unit, text:String) {
+    Button(
+        onClick = { onClick() },
+        shape = RoundedCornerShape(50),
+        colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF0D75A3))
+    ) {
         Text(text)
     }
 }
