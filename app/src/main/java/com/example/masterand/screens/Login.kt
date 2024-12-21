@@ -42,6 +42,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.TransformOrigin
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
@@ -136,7 +137,7 @@ fun Login(
             errorMessage = "Number must be between 5 and 10",
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
         )
-
+        val context = LocalContext.current
         Button(
             onClick = {
                 viewModel.email.value = email
@@ -145,7 +146,7 @@ fun Login(
 
 
                 coroutineScope.launch {
-                    viewModel.savePlayer()
+                    viewModel.savePlayer(context)
                     navController.navigate(
                         route = Screen.Profile.passArguments(colors.toInt())
                     )
