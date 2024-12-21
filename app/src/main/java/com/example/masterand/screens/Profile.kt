@@ -3,6 +3,7 @@ package com.example.masterand.screens
 //import com.example.masterand.providers.AppViewModelProvider
 //import androidx.lifecycle.viewmodel.compose.viewModel
 import android.widget.Toast
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -75,8 +76,7 @@ fun ProfileCard(
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(vertical = 16.dp),
-                verticalAlignment = Alignment.CenterVertically
+                    .padding(vertical = 16.dp)
             ) {
 
                 Box(
@@ -84,6 +84,7 @@ fun ProfileCard(
                         .padding(start = 16.dp)
                         .size(100.dp)
                         .clip(CircleShape)
+                        .border(2.dp, Color(0xFF0D75A3), CircleShape)
                 ) {
 
                     if (viewModel.imageBitmap.value != null) {
@@ -95,7 +96,7 @@ fun ProfileCard(
                         )
                     } else {
                         Icon(
-                            painter = painterResource(R.drawable.baseline_question_mark_24),
+                            painter = painterResource(R.drawable.baseline_person_24),
                             contentDescription = "Select profile photo",
                             modifier = Modifier.fillMaxSize(),
                             tint = MaterialTheme.colorScheme.onSurfaceVariant
@@ -106,11 +107,11 @@ fun ProfileCard(
                     modifier = Modifier
                         .padding(start = 16.dp)
                 ) {
-                    Text(name)
+                    Text(name, style = MaterialTheme.typography.headlineMedium)
                     Spacer(
-                        modifier = Modifier.size(8.dp)
+                        modifier = Modifier.size(2.dp)
                     )
-                    Text(email)
+                    Text(email, style = MaterialTheme.typography.bodyLarge)
                 }
             }
             Spacer(modifier = Modifier.height(16.dp))
@@ -157,7 +158,9 @@ fun FloatingButton(onClick: () -> Unit) {
                 Toast.makeText(context, "Scores deleted!", Toast.LENGTH_SHORT).show()
             },
             modifier = Modifier
-                .align(Alignment.BottomEnd)
+                .align(Alignment.BottomEnd),
+            containerColor = Color(0xFF0D75A3),
+            contentColor = Color.White
         ) {
             Text(
                 "Delete scores",

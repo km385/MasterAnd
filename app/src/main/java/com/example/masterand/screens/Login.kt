@@ -9,6 +9,7 @@ import androidx.compose.animation.core.animateFloat
 import androidx.compose.animation.core.infiniteRepeatable
 import androidx.compose.animation.core.rememberInfiniteTransition
 import androidx.compose.animation.core.tween
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -18,6 +19,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
@@ -38,6 +40,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.TransformOrigin
 import androidx.compose.ui.graphics.graphicsLayer
@@ -66,7 +69,7 @@ fun Login(
 
 
     var imageUri by remember { mutableStateOf<Uri?>(null) }
-    var name by rememberSaveable { mutableStateOf("imie") }
+    var name by rememberSaveable { mutableStateOf("Jakub") }
     var email by rememberSaveable { mutableStateOf("test@test.com") }
     var colors by rememberSaveable { mutableStateOf("5") }
 
@@ -220,14 +223,18 @@ fun ProfileImageWithPicker(
             AsyncImage(
                 model = imageUri,
                 contentDescription = "Profile photo",
-                modifier = Modifier.fillMaxSize(),
+                modifier = Modifier
+                    .fillMaxSize()
+                    .clip(CircleShape)
+                    .border(2.dp, Color(0xFF0D75A3), CircleShape),
                 contentScale = ContentScale.Crop
             )
         } else {
             Icon(
                 painter = painterResource(R.drawable.baseline_question_mark_24),
                 contentDescription = "Select profile photo",
-                modifier = Modifier.size(40.dp),
+                modifier = Modifier
+                    .size(40.dp),
                 tint = MaterialTheme.colorScheme.onSurfaceVariant
             )
             Icon(
@@ -241,11 +248,3 @@ fun ProfileImageWithPicker(
         }
     }
 }
-
-//@Preview
-//@Composable
-//fun ProfileScreenPreview() {
-//    MasterAndTheme {
-//        ProfileScreen()
-//    }
-//}

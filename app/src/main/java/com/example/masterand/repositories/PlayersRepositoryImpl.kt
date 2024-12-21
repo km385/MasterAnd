@@ -13,12 +13,10 @@ class PlayersRepositoryImpl @Inject constructor(
     private val playerDao: PlayerDao
 ) : PlayersRepository {
     private val currentPlayerId = MutableLiveData<Long>()
-    override fun getAllPlayersStream(): Flow<List<Player>> {
-        TODO("Not yet implemented")
-    }
 
-    override fun getPlayerStream(playerId: Long): Flow<Player?> =
-        playerDao.getPlayerStream(playerId)
+    override fun getPlayerStream(id: Long): Flow<Player?> {
+        return playerDao.getPlayerStream(id)
+    }
 
     override fun setCurrentPlayerId(id: Long) {
         currentPlayerId.postValue(id)

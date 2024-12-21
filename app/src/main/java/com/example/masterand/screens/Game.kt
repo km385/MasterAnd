@@ -120,11 +120,16 @@ fun GameScreen(
     colorCount: Int
 ) {
     val allColors = listOf(
-        Color.Red, Color(0xFFFFA500),
+        Color.Red,
         Color.Blue, Color.Yellow,
-        Color.Black, Color(0xFF00FFFF)
+        Color.Black, Color(0xFF00FFFF),
+        Color.Green,
+        Color.Magenta,
+        Color.Gray,
+        Color(0xFFE59C65),
+        Color(0xFF4F3A1B),
     )
-    val availableColors = List(colorCount) { index -> allColors[index % allColors.size] }
+    val availableColors = List(colorCount) { index -> allColors[index] }
     val score = remember { mutableIntStateOf(0) }
     var isGameOver = remember { mutableStateOf(false) }
     var rows = remember {
@@ -228,17 +233,6 @@ fun GameScreen(
                 )
             }
 
-            Button(onClick = {
-                // TODO: Comment out when shipping to prod
-                viewModel.score.longValue = 12
-                // viewModel.score.longValue = score.intValue.toLong()
-                coroutineScope.launch {
-                    viewModel.savePlayerScore()
-                }
-            }) {
-                Text("+")
-            }
-
             Row(
                 modifier = Modifier
                     .fillMaxWidth(),
@@ -307,7 +301,7 @@ fun GameRow(
         )
     ) {
         Row(
-            horizontalArrangement = Arrangement.spacedBy(16.dp),
+            horizontalArrangement = Arrangement.spacedBy(16.dp, Alignment.CenterHorizontally),
             verticalAlignment = Alignment.CenterVertically,
             modifier = Modifier.fillMaxWidth()
         ) {
@@ -381,7 +375,6 @@ fun FeedbackCircles(colors: List<Color>) {
 
 @Composable
 fun SelectableColorsRow(colors: List<Color>, onClick: (Int) -> Unit) {
-    // TODO(possible fix needed, shows previous color, but whatever)
     var selectedColorIndex by remember { mutableIntStateOf(-1) }
 
     Row(

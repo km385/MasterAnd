@@ -64,6 +64,7 @@ fun BaseScreen(navController: NavHostController) {
                 title = { Text(title) },
                 colors = TopAppBarDefaults.topAppBarColors(
                     containerColor = Color(0xFF0D75A3),
+                    titleContentColor = Color.White
                 ),
             )
         }

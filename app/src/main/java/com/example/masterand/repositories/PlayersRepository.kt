@@ -5,7 +5,6 @@ import com.example.masterand.entities.Player
 import kotlinx.coroutines.flow.Flow
 
 interface PlayersRepository {
-    fun getAllPlayersStream(): Flow<List<Player>>
     fun getPlayerStream(id: Long): Flow<Player?>
     fun setCurrentPlayerId(id: Long)
     fun getCurrentPlayerId() : LiveData<Long>

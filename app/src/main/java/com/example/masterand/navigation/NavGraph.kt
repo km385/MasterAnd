@@ -17,7 +17,6 @@ import com.example.masterand.screens.Login
 import com.example.masterand.screens.ProfileCard
 import com.example.masterand.screens.ResultsScreen
 
-// TODO(fix transitions if necessary)
 @Composable
 fun SetupNavGraph(navController: NavHostController) {
     NavHost(
@@ -83,10 +82,9 @@ fun SetupNavGraph(navController: NavHostController) {
             }
         ) { backStackEntry ->
             val colorCount = backStackEntry.arguments?.getInt("color_count")
-            // TODO(change to default value rather then crash)
             GameScreen(
                 navController = navController,
-                colorCount = colorCount ?: throw IllegalStateException("no color count passed")
+                colorCount = colorCount ?: 5
             )
         }
 
