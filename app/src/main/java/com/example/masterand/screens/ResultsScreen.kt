@@ -1,4 +1,4 @@
-package com.example.masterand
+package com.example.masterand.screens
 
 //import androidx.lifecycle.viewmodel.compose.viewModel
 //import com.example.masterand.providers.AppViewModelProvider
@@ -33,6 +33,7 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
+import com.example.masterand.navigation.Screen
 import com.example.masterand.entities.PlayerWithScore
 import com.example.masterand.viewModels.ResultsViewModel
 

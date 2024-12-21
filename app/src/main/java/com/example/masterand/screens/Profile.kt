@@ -1,4 +1,4 @@
-package com.example.masterand
+package com.example.masterand.screens
 
 //import com.example.masterand.providers.AppViewModelProvider
 //import androidx.lifecycle.viewmodel.compose.viewModel
@@ -41,6 +41,8 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import coil.compose.AsyncImage
+import com.example.masterand.R
+import com.example.masterand.navigation.Screen
 import com.example.masterand.viewModels.ProfileViewModel
 import kotlinx.coroutines.launch
 
@@ -127,13 +129,11 @@ fun ProfileCard(
                 }, text = "Log out")
 
                 FilledButton(onClick = {
-                    navController.navigate(Screen.Game
-                        .passArguments(colorCount))
+                    navController.navigate(Screen.Game.passArguments(colorCount))
                 }, text = "Play")
 
                 FilledButton(onClick = {
-                    navController.navigate(Screen.HighScores
-                        .passArguments(recentScore = null, colorCount = colorCount))
+                    navController.navigate(Screen.HighScores.passArguments(recentScore = null, colorCount = colorCount))
                 }, text = "High Scores")
             }
 

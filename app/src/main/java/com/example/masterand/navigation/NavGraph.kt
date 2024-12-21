@@ -1,4 +1,4 @@
-package com.example.masterand
+package com.example.masterand.navigation
 
 import androidx.compose.animation.AnimatedContentTransitionScope
 import androidx.compose.animation.core.EaseIn
@@ -12,6 +12,10 @@ import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
+import com.example.masterand.screens.GameScreen
+import com.example.masterand.screens.Login
+import com.example.masterand.screens.ProfileCard
+import com.example.masterand.screens.ResultsScreen
 
 // TODO(fix transitions if necessary)
 @Composable
@@ -35,7 +39,7 @@ fun SetupNavGraph(navController: NavHostController) {
                 )
             }
         ) {
-            ProfileScreen(navController = navController)
+            Login(navController = navController)
         }
 
         composable(

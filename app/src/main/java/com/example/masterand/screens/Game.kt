@@ -1,4 +1,4 @@
-package com.example.masterand
+package com.example.masterand.screens
 
 //import com.example.masterand.providers.AppViewModelProvider
 //import androidx.lifecycle.viewmodel.compose.viewModel
@@ -56,6 +56,7 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
+import com.example.masterand.navigation.Screen
 import com.example.masterand.viewModels.GameViewModel
 import kotlinx.coroutines.launch
 
@@ -217,8 +218,7 @@ fun GameScreen(
                 FilledButton(
                     onClick = {
                         navController.navigate(
-                            route = Screen.HighScores
-                                .passArguments(
+                            route = Screen.HighScores.passArguments(
                                     recentScore = score.intValue.toLong(),
                                     colorCount = colorCount
                                 )

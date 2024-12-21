@@ -1,4 +1,4 @@
-package com.example.masterand
+package com.example.masterand.navigation
 
 sealed class Screen(val route: String) {
 
