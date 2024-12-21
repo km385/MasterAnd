@@ -5,4 +5,5 @@ import kotlinx.coroutines.flow.Flow
 
 interface PlayerScoresRepository {
     fun loadPlayersWithScores(): Flow<List<PlayerWithScore>>
+    suspend fun deletePlayersScores(playerId: Long)
 }

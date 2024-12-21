@@ -3,6 +3,7 @@ package com.example.masterand
 //import com.example.masterand.providers.AppViewModelProvider
 //import androidx.lifecycle.viewmodel.compose.viewModel
 import android.util.Log
+import android.widget.Toast
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -16,8 +17,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.FloatingActionButton
@@ -28,11 +27,13 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -41,6 +42,7 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import coil.compose.AsyncImage
 import com.example.masterand.viewModels.ProfileViewModel
+import kotlinx.coroutines.launch
 
 private const val TAG = "Profile"
 
@@ -54,6 +56,8 @@ fun ProfileCard(
     LaunchedEffect(Unit) {
         viewModel.loadPlayer()
     }
+
+    val coroutineScope = rememberCoroutineScope()
     val name by viewModel.name
     val email by viewModel.email
     val imageUri by viewModel.imageUri
@@ -84,12 +88,14 @@ fun ProfileCard(
                 ) {
 
                     if (imageUri != "null") {
-                        Log.i("lol", "ProfileCard: async")
                         AsyncImage(
                             model = imageUri,
                             contentDescription = "Profile Image",
                             modifier = Modifier.fillMaxSize(),
-                            contentScale = ContentScale.Crop
+                            contentScale = ContentScale.Crop,
+                            onError = { error ->
+                                Log.i(TAG, "ProfileCard: ${error.result.throwable}")
+                            }
                         )
                     } else {
                         Icon(
@@ -135,25 +141,35 @@ fun ProfileCard(
 
 
 
-        Example(onClick = {
-            navController.navigate(route = Screen.Login.route)
+        FloatingButton(onClick = {
+            coroutineScope.launch {
+                viewModel.delete()
+            }
         })
     }
 }
 
 @Composable
-fun Example(onClick: () -> Unit) {
+fun FloatingButton(onClick: () -> Unit) {
+    val context = LocalContext.current
     Box(
         modifier = Modifier
             .fillMaxSize()
             .padding(16.dp)
     ) {
         FloatingActionButton(
-            onClick = { onClick() },
+            onClick = {
+                onClick()
+                Toast.makeText(context, "Scores deleted!", Toast.LENGTH_SHORT).show()
+            },
             modifier = Modifier
                 .align(Alignment.BottomEnd)
         ) {
-            Icon(Icons.Filled.PlayArrow, contentDescription = "Floating action button")
+            Text(
+                "Delete scores",
+                modifier = Modifier
+                    .padding(16.dp)
+            )
         }
     }
 }

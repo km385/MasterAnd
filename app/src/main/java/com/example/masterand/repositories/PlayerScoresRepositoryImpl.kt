@@ -11,5 +11,8 @@ class PlayerScoresRepositoryImpl @Inject constructor(
     private val playerScoreDao: PlayerScoreDao
 ): PlayerScoresRepository {
     override fun loadPlayersWithScores(): Flow<List<PlayerWithScore>> =  playerScoreDao.loadPlayersWithScores();
+    override suspend fun deletePlayersScores(playerId: Long) {
+        playerScoreDao.deleteScoresByPlayerId(playerId)
+    }
 
 }

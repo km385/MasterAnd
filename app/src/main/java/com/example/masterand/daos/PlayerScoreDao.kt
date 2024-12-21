@@ -15,4 +15,7 @@ interface PlayerScoreDao {
                 "FROM players, scores WHERE players.playerId = scores.playerId"
     )
     fun loadPlayersWithScores(): Flow<List<PlayerWithScore>>
+
+    @Query("DELETE FROM scores WHERE playerId = :playerId")
+    suspend fun deleteScoresByPlayerId(playerId: Long)
 }
